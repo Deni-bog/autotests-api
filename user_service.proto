@@ -1,0 +1,9 @@
+syntax = "proto3"
+package userservice;
+message getUserRequest{
+String username = 1;
+}
+
+message GetUserRespones {
+string message = 1;
+}
