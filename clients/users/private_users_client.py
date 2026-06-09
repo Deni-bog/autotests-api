@@ -4,6 +4,9 @@ from clients.api_client import APIClient
 
 from typing import TypedDict
 
+from clients.private_http_builder import get_private_http_client, AuthenticationUserDict
+
+
 class UpdateUserRequestDict(TypedDict):
     email: str
     lastName: str
@@ -14,14 +17,14 @@ class PrivateUsersClient(APIClient):
     """
        Клиент для работы с /api/v1/users
     """
-    def get_get_suer_me_api(self) -> Response:
+    def get_suer_me_api(self) -> Response:
         """
         Метод получения текущего пользователя.
         :return: Ответ от сервера в виде объекта httpx.Response
         """
         return self.get("/api/v1/users/me")
 
-    def get_get_user_api(self,user_id:str) -> Response:
+    def get_user_api(self,user_id:str) -> Response:
         """
         Метод получения пользователя по идентификатору.
         :param user_id: Идентификатор пользователя.
@@ -45,3 +48,6 @@ class PrivateUsersClient(APIClient):
         :return: Ответ от сервера в виде объекта httpx.Response
         """
         return self.delete(f"/api/v1/users/{user_id}")
+
+def get_private_users_client(user:AuthenticationUserDict)-> PrivateUsersClient:
+    return PrivateUsersClient(client = get_private_http_client(user))
