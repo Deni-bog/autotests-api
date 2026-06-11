@@ -3,6 +3,9 @@ from clients.api_client import APIClient
 
 from typing import TypedDict
 
+from clients.private_http_builder import AuthenticationUserDict, get_private_http_client
+
+
 class GetExerciseQueryDict(TypedDict):
     """
     Описание структуры запроса на получение списка заданий.
@@ -20,6 +23,9 @@ class CreateExerciseRequestDict(TypedDict):
     orderIndex: int | None
     description: str
     estimatedTime: str
+
+class CreateExerciseResponseDict(TypedDict):
+    exercise: CreateExerciseRequestDict
 
 class UpdateExerciseRequestDict(TypedDict):
     """
@@ -76,4 +82,12 @@ class ExercisesClient(APIClient):
         :param exercise_id: Идентификатор задания.
         :return: Ответ от сервера в виде объекта httpx.Response
         """
+
         return self.delete(f"/api/v1/exercises/{exercise_id}")
+
+    def create_exercise(self,request:CreateExerciseRequestDict) -> CreateExerciseRequestDict:
+        response = self.create_exercise_api(request)
+        return response.json()
+
+def get_exercises_client(user:AuthenticationUserDict) -> ExercisesClient:
+    return ExercisesClient(client=get_private_http_client(user))
