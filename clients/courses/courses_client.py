@@ -11,6 +11,9 @@ from clients.users.private_users_client import User
 
 
 class Course(TypedDict):
+    """
+    Описание структуры курса.
+    """
     id: str
     title: str
     maxScore: int
@@ -106,4 +109,8 @@ class CourseClient(APIClient):
         return response.json()
 
 def get_courses_client(user:AuthenticationUserDict)-> CourseClient:
+    """
+    Функция создаёт экземпляр CoursesClient с уже настроенным HTTP-клиентом.
+    :return: Готовый к использованию CoursesClient.
+    """
     return CourseClient(client = get_private_http_client(user))

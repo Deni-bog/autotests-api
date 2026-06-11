@@ -15,7 +15,6 @@ create_user_request = CreateUserRequestDict(
       firstName= "string",
       middleName= "string"
 )
-
 create_user_response = public_users_client.create_user(create_user_request)
 
 authentication_user = AuthenticationUserDict(
@@ -43,7 +42,6 @@ create_courses_request = CreateCourseRequestDict(
     previewFileId = create_file_response['file']['id'],
     createdByUserId = create_user_response['user']['id']
 )
-
 
 create_course_response = courses_client.create_course(create_courses_request)
 print('create course data:',create_course_response)
