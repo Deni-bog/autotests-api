@@ -1,0 +1,49 @@
+from clients import courses
+from clients.authentication.authentication_client import get_authentication_client
+from clients.courses.courses_client import get_courses_client, CreateCourseRequestDict
+from clients.files.files_clint import get_files_client, CreateFileRequestDict
+from clients.private_http_builder import AuthenticationUserDict
+from clients.users.public_users_client import get_public_user_client, CreateUserRequestDict
+from tools.fakers import get_random_email
+
+public_users_client = get_public_user_client()
+
+create_user_request = CreateUserRequestDict(
+      email = get_random_email(),
+      password ="string",
+      lastName="string",
+      firstName= "string",
+      middleName= "string"
+)
+
+create_user_response = public_users_client.create_user(create_user_request)
+
+authentication_user = AuthenticationUserDict(
+    email = create_user_request["email"],
+    password = create_user_request["password"],
+)
+
+files_client = get_files_client(authentication_user)
+courses_client = get_courses_client(authentication_user)
+
+create_file_request = CreateFileRequestDict(
+    filename = 'image.png',
+    directory='coursers',
+    upload_file = './testdata/files/image.png'
+)
+create_file_response = files_client.create_file(create_file_request)
+print('create file data:',create_file_response)
+
+create_courses_request = CreateCourseRequestDict(
+    title = 'title',
+    maxScore=100,
+    minScore=100,
+    description = 'description',
+    estimatedTime='2 weeks',
+    previewFileId = create_file_response['file']['id'],
+    createdByUserId = create_user_response['user']['id']
+)
+
+
+create_course_response = courses_client.create_course(create_courses_request)
+print('create course data:',create_course_response)

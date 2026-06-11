@@ -1,10 +1,27 @@
+from urllib import response
+
 from clients.api_client import APIClient
 from httpx import Response
 
 from typing import TypedDict
 
+from clients.files.files_clint import CreateFileRequestDict, File
 from clients.private_http_builder import AuthenticationUserDict, get_private_http_client
+from clients.users.private_users_client import User
 
+
+class Course(TypedDict):
+    id: str
+    title: str
+    maxScore: int
+    minScore: int
+    description: str
+    previewFile: File
+    estimatedTime: str
+    createdByUser: User
+
+class CreateCourseResponseDict(TypedDict):
+    course: Course
 
 class GetCoursesQueryDict(TypedDict):
     """
@@ -84,6 +101,9 @@ class CourseClient(APIClient):
         """
         return self.delete(f"/api/v1/courses/{course_id}")
 
+    def create_course(self,request:CreateCourseRequestDict) -> CreateCourseResponseDict:
+        response = self.create_course_api(request)
+        return response.json()
 
 def get_courses_client(user:AuthenticationUserDict)-> CourseClient:
     return CourseClient(client = get_private_http_client(user))

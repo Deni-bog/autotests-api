@@ -15,6 +15,15 @@ class CreateFileRequestDict(TypedDict):
     directory: str
     upload_file: str
 
+class File(TypedDict):
+    id: str
+    filename: str
+    directory: str
+    url: str
+
+class CreateFileRequest(TypedDict):
+    file:File
+
 class FilesClient(APIClient):
     """
     Клиент для работы с /api/v1/files
@@ -45,6 +54,10 @@ class FilesClient(APIClient):
         :return: Ответ от сервера в виде объекта httpx.Response
         """
         return self.delete(f"/api/v1/files/{file_id}")
+
+    def create_file(self,request:CreateFileRequestDict)->CreateFileRequest:
+        response = self.create_file_api(request)
+        return response.json()
 
 def get_files_client(user:AuthenticationUserDict)-> FilesClient:
     return FilesClient(client = get_private_http_client(user))
